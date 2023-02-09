@@ -10,7 +10,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   static const platform = MethodChannel("battery");
-  String batteryLevel = 'heloo';
+  String batteryLevel = 'Waiting...';
 
   @override
   Widget build(BuildContext context) {
@@ -19,12 +19,23 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(batteryLevel),
+            Text(
+              batteryLevel,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
             ElevatedButton(
-                onPressed: () {
-                  getBatteryLevel();
-                },
-                child: const Text('Get Battery Level'))
+              onPressed: () {
+                getBatteryLevel();
+              },
+              child: const Text(
+                'Get Battery Level',
+              ),
+            )
           ],
         ),
       ),
@@ -34,12 +45,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> getBatteryLevel() async {
     try {
       final int result = await platform.invokeMethod('getBatteryLevel');
-      batteryLevel = 'Battery level at $result % .';
+      batteryLevel = 'Battery level at $result %';
     } on PlatformException catch (e) {
       batteryLevel = "Failed to get battery level: '${e.message}'.";
     }
     setState(() {
       batteryLevel = batteryLevel;
     });
+    print(batteryLevel);
   }
 }
